@@ -15,23 +15,25 @@ public class RandomStrategy extends BasicStrategy {
 
 	@Override
 	public void pullStones(Board board) {
-		boolean correctChosen = false;
+		boolean rowHasStones = false;
 		boolean[] row = new boolean[0];
 		int rowNum = -1;
 
 		Set<Integer> rowIndexes = createSet();
 
-		while (!correctChosen) {
+		while (!rowHasStones) {
 			rowNum = random.nextInt(Board.HEIGHT);
 
 			if (rowIndexes.contains(rowNum)) {
 				row = board.getRow(rowNum);
-				correctChosen = !Utils.checkRowIsEmpty(row);
-				rowIndexes.remove(rowNum);
-				if(rowIndexes.size() == 0) {
-					System.out.println("critical issue!");
-					break;
+				rowHasStones = !Utils.checkRowIsEmpty(row);
+				if (!rowHasStones) {
+					rowIndexes.remove(rowNum);
 				}
+//				if (rowIndexes.size() == 0) {
+//					System.out.println("critical issue! " + rowHasStones + " " + rowNum);
+//					break;
+//				}
 			}
 		}
 		board.setRow(rowNum, grabStones(row));
@@ -46,7 +48,7 @@ public class RandomStrategy extends BasicStrategy {
 			int takeCount = random.nextInt(Board.WIDTH) + 1;
 
 			// here I check whether can take exact stone amount from this row
-			for (int i = 0; i < Board.WIDTH  + 1 - takeCount; i++) {
+			for (int i = 0; i < Board.WIDTH + 1 - takeCount; i++) {
 				boolean continuousSet = true;
 				for (int j = 0; j < takeCount; j++) {
 					continuousSet = continuousSet & row[i + j];
